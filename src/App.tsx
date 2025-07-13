@@ -24,6 +24,22 @@ function App() {
           <div>S - Backward</div>
           <div>A - Turn Left</div>
           <div>D - Turn Right</div>
+          <div className="border-t border-gray-500 pt-2 mt-2">
+            <div>T - Select Track</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Track Info */}
+      <div className="absolute top-4 right-4 z-10 bg-black/70 text-white p-4 rounded-lg backdrop-blur-sm">
+        <h3 className="font-semibold mb-2">🏁 Racing Circuits</h3>
+        <div className="text-sm space-y-1">
+          <div>🇲🇨 Monaco GP Circuit</div>
+          <div>🇬🇧 Silverstone Circuit</div>
+          <div>🇩🇪 Nürburgring Nordschleife</div>
+          <div className="border-t border-gray-500 pt-2 mt-2 text-xs text-gray-300">
+            Press T to change tracks
+          </div>
         </div>
       </div>
 

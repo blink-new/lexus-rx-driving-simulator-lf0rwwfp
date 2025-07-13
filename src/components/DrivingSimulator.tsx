@@ -6,6 +6,8 @@ import * as THREE from 'three'
 import LexusCar from './LexusCar'
 import Terrain from './Terrain'
 import Environment from './Environment'
+import Track from './Track'
+import TrackSelector from './TrackSelector'
 
 const DrivingSimulator: React.FC = () => {
   const { camera } = useThree()
@@ -15,6 +17,10 @@ const DrivingSimulator: React.FC = () => {
     a: false,
     d: false
   })
+
+  // Track selection state
+  const [selectedTrack, setSelectedTrack] = useState('monaco')
+  const [showTrackSelector, setShowTrackSelector] = useState(false)
 
   // Car physics body
   const [carRef, carApi] = useBox(() => ({
@@ -54,6 +60,10 @@ const DrivingSimulator: React.FC = () => {
       if (key in keys) {
         setKeys(prev => ({ ...prev, [key]: true }))
       }
+      // Toggle track selector with 'T' key
+      if (key === 't') {
+        setShowTrackSelector(prev => !prev)
+      }
     }
 
     const handleKeyUp = (event: KeyboardEvent) => {
@@ -71,6 +81,14 @@ const DrivingSimulator: React.FC = () => {
       window.removeEventListener('keyup', handleKeyUp)
     }
   }, [])
+
+  // Reset car position when track changes
+  useEffect(() => {
+    carApi.position.set(0, 2, 0)
+    carApi.rotation.set(0, 0, 0)
+    carApi.velocity.set(0, 0, 0)
+    carApi.angularVelocity.set(0, 0, 0)
+  }, [selectedTrack, carApi])
 
   // Car movement and camera follow
   useFrame(() => {
@@ -146,6 +164,14 @@ const DrivingSimulator: React.FC = () => {
 
   return (
     <>
+      {/* Track Selector UI */}
+      <TrackSelector
+        selectedTrack={selectedTrack}
+        onTrackChange={setSelectedTrack}
+        isVisible={showTrackSelector}
+        onClose={() => setShowTrackSelector(false)}
+      />
+
       {/* Lighting */}
       <ambientLight intensity={0.6} />
       <directionalLight
@@ -163,7 +189,10 @@ const DrivingSimulator: React.FC = () => {
       {/* Environment */}
       <Environment />
 
-      {/* Terrain */}
+      {/* Racing Track */}
+      <Track trackName={selectedTrack} />
+
+      {/* Terrain (background) */}
       <Terrain />
 
       {/* Lexus Car */}
